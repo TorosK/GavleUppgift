@@ -13,14 +13,17 @@ class CalculatorLogic {
     private var firstOperand = BigDecimal.ZERO
     private var secondOperand = BigDecimal.ZERO
     private var currentOperation = OperationType.NONE
+    private var isNewOperation = false
+
 
     // Function to set operand values
     fun setOperand(value: String) {
-        // If no operation has been set yet, assign value to firstOperand
-        if (currentOperation == OperationType.NONE) {
+        if (isNewOperation) {
+            firstOperand = BigDecimal(value)
+            isNewOperation = false
+        } else if (currentOperation == OperationType.NONE) {
             firstOperand = BigDecimal(value)
         } else {
-            // Otherwise, assign it to the secondOperand
             secondOperand = BigDecimal(value)
         }
     }
@@ -32,9 +35,7 @@ class CalculatorLogic {
 
     // Function to calculate the result based on operands and operation type
     fun calculate(): BigDecimal {
-        // Using 'when' expression to perform the appropriate arithmetic operation
-        return when (currentOperation) {
-            // If addition, then add the two operands
+        val result = when (currentOperation) {
             OperationType.ADD -> firstOperand + secondOperand
 
             // If subtraction, then subtract the second operand from the first
@@ -58,6 +59,10 @@ class CalculatorLogic {
             // If no operation is set, return zero
             else -> BigDecimal.ZERO
         }
+
+        firstOperand = result
+        isNewOperation = true
+        return result
     }
 
     // Function to clear the stored operands and operation type

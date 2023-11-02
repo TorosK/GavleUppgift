@@ -85,7 +85,10 @@ class MainActivity : AppCompatActivity() {
         // Update the TextView display with the result
         display.text = result
 
-        // Clear the calculator logic for the next calculation
-        calculatorLogic.clear()
+        // Set the result as the new firstOperand for subsequent operations
+        calculatorLogic.setOperand(result)
+
+        // Reset the current operation to NONE
+        calculatorLogic.setOperation(OperationType.NONE)
     }
 }

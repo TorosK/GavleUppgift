@@ -1,8 +1,8 @@
 // MainActivity.kt
-// Package declaration
+// Package declaration - specifies the namespace for this class.
 package com.example.gavleuppgift
 
-// Import statements
+// Import necessary classes and components from the Android framework.
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -11,84 +11,87 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.gavleuppgift.logic.CalculatorLogic
 import com.example.gavleuppgift.model.OperationType
 
-// MainActivity class that inherits from AppCompatActivity
+// MainActivity class that represents the main screen of the app. It inherits from AppCompatActivity,
+// which provides compatibility features and basic activity lifecycle handling.
 class MainActivity : AppCompatActivity() {
 
-    // Declares an instance of CalculatorLogic class for calculation logic
+    // Create an instance of the CalculatorLogic class to handle the arithmetic operations.
     private val calculatorLogic = CalculatorLogic()
 
-    // Declare a lateinit TextView variable for the display
+    // Declare a reference for the display TextView where the user's input and calculation results will be shown.
     private lateinit var display: TextView
 
-    // The onCreate method: Called when the activity is first created
+    // This method is called when the activity is first created. It sets up the initial state of the activity.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Associate this activity with its layout file (activity_main.xml).
         setContentView(R.layout.activity_main)
 
-        // Initialize the display TextView
+        // Link the display variable to the actual TextView in the layout.
         display = findViewById(R.id.display)
     }
 
-    // Method triggered when number buttons are clicked
+    // This method is called when any of the number buttons (0-9) is clicked.
     fun onNumberClick(view: View) {
-        // Cast the clicked view to Button
+        // Convert the clicked view to a Button to access its text property.
         val button = view as Button
 
-        // Get the current display text
+        // Get the number or symbol currently displayed on the calculator's screen.
         val currentDisplay = display.text.toString()
 
-        // Append the button's text to the current display
+        // Append the text of the clicked button to the current display.
         val newDisplay = currentDisplay + button.text
 
-        // Update the TextView display
+        // Show the updated number or symbol sequence on the screen.
         display.text = newDisplay
 
-        // Update the operand in the calculator logic
+        // Pass the current displayed value to the calculator logic for further processing.
         calculatorLogic.setOperand(newDisplay)
     }
 
-    // Method triggered when operation buttons are clicked
+    // This method is called when an operation button (+, -, *, /) is clicked.
     fun onOperationClick(view: View) {
-        // Cast the clicked view to Button
+        // Convert the clicked view to a Button.
         val button = view as Button
 
-        // Determine which operation is selected based on the button text
+        // Determine the type of arithmetic operation based on the button's text.
         val operation = when (button.text) {
             "+" -> OperationType.ADD
             "-" -> OperationType.SUBTRACT
             "*" -> OperationType.MULTIPLY
             "/" -> OperationType.DIVIDE
+            // In case an unknown button is clicked, set the operation to NONE.
             else -> OperationType.NONE
         }
 
-        // Update the operation in the calculator logic
+        // Pass the selected operation type to the calculator logic.
         calculatorLogic.setOperation(operation)
 
-        // Clear the display for the next input
+        // Clear the display to allow the user to input the second number.
         display.text = ""
     }
 
-    // Method to clear the calculator's state
+    // This method is called when the "C" (clear) button is clicked. It resets the calculator's state.
     fun onClearClick(view: View) {
-        // Clear the calculator logic
+        // Reset the calculator logic to its initial state.
         calculatorLogic.clear()
 
-        // Clear the TextView display
+        // Clear the display.
         display.text = ""
     }
 
-    // Method to calculate the result when "=" button is clicked
+    // This method is triggered when the "=" (equal) button is clicked to compute the result of the operation.
     fun onEqualClick(view: View) {
-        // Calculate the result using the calculator logic
+        // Calculate the result of the operation.
         val result = calculatorLogic.calculate().toString()
 
-        // Update the TextView display with the result
+        // Display the result on the calculator's screen.
         display.text = result
 
-        // Set the result as the new firstOperand for subsequent operations
+        // Store the result in the calculator logic so that it can be used in the next calculation.
         calculatorLogic.setOperand(result)
 
-        // Reset the current operation to NONE
+        // Reset the operation type to NONE.
         calculatorLogic.setOperation(OperationType.NONE)
     }
 }

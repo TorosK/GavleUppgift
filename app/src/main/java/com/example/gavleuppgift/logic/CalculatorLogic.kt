@@ -1,22 +1,21 @@
 // CalculatorLogic.kt
-// Package declaration
+// Package declaration - this defines the namespace for the class.
 package com.example.gavleuppgift.logic
 
-// Importing necessary classes
+// Necessary imports for the class functionality.
 import com.example.gavleuppgift.model.OperationType
 import java.math.BigDecimal
 import java.math.MathContext
 
-// CalculatorLogic class definition
+// The CalculatorLogic class is responsible for handling the calculation logic for the calculator app.
 class CalculatorLogic {
-    // Private variables to hold the operands and the type of operation
+    // Declare variables to store the values of the two operands, the chosen operation, and a flag to identify new operations.
     private var firstOperand = BigDecimal.ZERO
     private var secondOperand = BigDecimal.ZERO
     private var currentOperation = OperationType.NONE
     private var isNewOperation = false
 
-
-    // Function to set operand values
+    // This function sets the value of either the first or the second operand, based on the current state of the calculator.
     fun setOperand(value: String) {
         if (isNewOperation) {
             firstOperand = BigDecimal(value)
@@ -28,46 +27,48 @@ class CalculatorLogic {
         }
     }
 
-    // Function to set the type of arithmetic operation
+    // Set the desired arithmetic operation (add, subtract, multiply, divide) for the calculator.
     fun setOperation(operation: OperationType) {
         currentOperation = operation
     }
 
-    // Function to calculate the result based on operands and operation type
+    // Based on the selected operation and the provided operands, compute and return the result.
     fun calculate(): BigDecimal {
+        // Switch on the current operation type to perform the required calculation.
         val result = when (currentOperation) {
+            // If addition, add the two operands.
             OperationType.ADD -> firstOperand + secondOperand
 
-            // If subtraction, then subtract the second operand from the first
+            // Subtract the second operand from the first.
             OperationType.SUBTRACT -> firstOperand - secondOperand
 
-            // If multiplication, then multiply the two operands
+            // Multiply the two operands.
             OperationType.MULTIPLY -> firstOperand * secondOperand
 
-            // If division, then divide the first operand by the second
+            // Divide the first operand by the second.
+            // Special handling is required to avoid division by zero.
             OperationType.DIVIDE -> {
-                // Check if the second operand is zero to handle divide-by-zero case
+                // If the denominator (secondOperand) is zero, return zero to avoid a crash.
                 if (secondOperand == BigDecimal.ZERO) {
-                    // Handle divide by zero
                     BigDecimal.ZERO
                 } else {
-                    // Divide using the specified math context for precision
+                    // Use BigDecimal's divide function with a specified math context to handle precision during division.
                     firstOperand.divide(secondOperand, MathContext.DECIMAL128)
                 }
             }
 
-            // If no operation is set, return zero
+            // If no operation is chosen, return zero.
             else -> BigDecimal.ZERO
         }
 
+        // Set the computed result as the new firstOperand for any subsequent calculations.
         firstOperand = result
         isNewOperation = true
         return result
     }
 
-    // Function to clear the stored operands and operation type
+    // Reset the operands and operation type to their initial states.
     fun clear() {
-        // Reset operands and operation type to default values
         firstOperand = BigDecimal.ZERO
         secondOperand = BigDecimal.ZERO
         currentOperation = OperationType.NONE
